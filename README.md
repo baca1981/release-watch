@@ -223,7 +223,7 @@ limits, secret-safe error output, HTML escaping, cross-process locking and webho
 recovery. They do not depend on GitHub or send external notifications.
 
 The included GitHub Actions workflow runs the suite on Windows/Linux and Python
-3.11/3.14 after publication. Its presence does not imply that remote CI has run.
+3.11/3.14 after publication. See the repository's Actions history for current results.
 
 `report` rebuilds the report without source or webhook requests. It writes an empty
 report if no database exists yet. Reports show the latest 100 checks and events,

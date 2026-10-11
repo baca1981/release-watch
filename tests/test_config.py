@@ -23,7 +23,7 @@ class ConfigTests(unittest.TestCase):
     def test_paths_are_relative_to_config_and_repos_deduplicated(self):
         config = self.load()
         self.assertEqual(config.repositories, ("psf/requests",))
-        self.assertEqual(config.database, self.path.parent / "data/state.sqlite3")
+        self.assertEqual(config.database, (self.path.parent / "data/state.sqlite3").resolve())
 
     def test_unknown_keys_and_invalid_numbers_rejected(self):
         for extra in ['timeout_seconds = 0', 'get_attempts = true', 'get_attempts = 6', 'typo = "x"']:

@@ -11,7 +11,7 @@ This file records completed checks, not a claim of production deployment.
 | Offline demo | 4 observations, 1 change, 1 delivered event, 2 delivery attempts | Synthetic release data; real local HTTP |
 | Live public API | Two runs against two repositories; 4 successful observations | Read-only, no authentication or external webhook |
 | HTML report | Opened and inspected in Chromium at 1440 px and 390 px | No page errors; tables scroll within mobile layout |
-| CI configuration | Included Windows/Linux, Python 3.11/3.14 workflow | Remote workflow has not been executed |
+| CI configuration | Included Windows/Linux, Python 3.11/3.14 workflow | See the public Actions history for per-commit results |
 
 ## Automated tests
 
