@@ -23,6 +23,14 @@ demonstration, not a claim of an existing client deployment.
 
 ## See it in one minute
 
+**[Open the public demo](https://baca1981.github.io/release-watch/)** — view the
+completed report directly in your browser. This is a static snapshot with synthetic
+release data and scenario timestamps, not a continuously running monitor.
+
+GitHub Pages publishes the existing `examples/demo/report.html` as `index.html`.
+The separate Pages workflow deploys only that report when it or the workflow changes
+on `main`; it can also be run manually. No additional secrets are required.
+
 From the project directory:
 
 ```console
