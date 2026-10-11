@@ -1,0 +1,11 @@
+# Paths are relative to this file. Secrets come only from environment variables.
+repositories = ["psf/requests", "pallets/flask"]
+database = "data/state.sqlite3"
+report_directory = "reports"
+timeout_seconds = 10
+get_attempts = 3
+
+# Leave empty to keep events queued without sending. Set the environment variable
+# RELEASE_WATCH_WEBHOOK_URL to an HTTPS endpoint accepting the documented JSON.
+webhook_url_env = "RELEASE_WATCH_WEBHOOK_URL"
+github_token_env = "GITHUB_TOKEN"

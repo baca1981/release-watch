@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+dist/
+.env
+config.toml
+data/
+reports/
+demo-output/
+*.sqlite3*
+*.lock

@@ -1,0 +1,83 @@
+{
+  "generated_at": "2026-01-01T12:06:00+00:00",
+  "snapshots": [
+    {
+      "repository": "demo/example",
+      "checked_at": "2026-01-01T12:06:00+00:00",
+      "release": {
+        "release_id": 2,
+        "tag": "v1.1.0",
+        "name": "Synthetic demo release",
+        "url": "https://github.com/demo/example/releases/tag/v1.1.0",
+        "published_at": "2026-01-01T12:00:00Z"
+      }
+    }
+  ],
+  "events": [
+    {
+      "event_id": "032adc62-cab4-425c-a361-72539592abb4",
+      "repository": "demo/example",
+      "detected_at": "2026-01-01T12:04:00+00:00",
+      "delivered_at": "2026-01-01T12:06:00+00:00",
+      "attempts": 2,
+      "next_attempt_at": "2026-01-01T12:05:00+00:00",
+      "last_error": null,
+      "payload": {
+        "schema_version": 1,
+        "event_id": "032adc62-cab4-425c-a361-72539592abb4",
+        "event": "release.changed",
+        "repository": "demo/example",
+        "detected_at": "2026-01-01T12:04:00+00:00",
+        "previous": {
+          "release_id": 1,
+          "tag": "v1.0.0",
+          "name": "Synthetic demo release",
+          "url": "https://github.com/demo/example/releases/tag/v1.0.0",
+          "published_at": "2026-01-01T12:00:00Z"
+        },
+        "current": {
+          "release_id": 2,
+          "tag": "v1.1.0",
+          "name": "Synthetic demo release",
+          "url": "https://github.com/demo/example/releases/tag/v1.1.0",
+          "published_at": "2026-01-01T12:00:00Z"
+        }
+      }
+    }
+  ],
+  "checks": [
+    {
+      "id": 4,
+      "repository": "demo/example",
+      "checked_at": "2026-01-01T12:06:00+00:00",
+      "status": "unchanged",
+      "detail": "v1.1.0"
+    },
+    {
+      "id": 3,
+      "repository": "demo/example",
+      "checked_at": "2026-01-01T12:04:00+00:00",
+      "status": "changed",
+      "detail": "v1.1.0"
+    },
+    {
+      "id": 2,
+      "repository": "demo/example",
+      "checked_at": "2026-01-01T12:02:00+00:00",
+      "status": "unchanged",
+      "detail": "v1.0.0"
+    },
+    {
+      "id": 1,
+      "repository": "demo/example",
+      "checked_at": "2026-01-01T12:00:00+00:00",
+      "status": "baseline",
+      "detail": "v1.0.0"
+    }
+  ],
+  "totals": {
+    "checks": 4,
+    "changes": 1,
+    "pending": 0
+  }
+}

@@ -1,0 +1,3 @@
+Offline demo: synthetic releases, fixed scenario timestamps, real HTTP only on 127.0.0.1.
+First webhook attempt deliberately returns 503; second returns 204.
+No external messages are sent.

@@ -1,0 +1,98 @@
+"""Generate self-contained HTML and machine-readable JSON reports."""
+
+from html import escape
+import json
+import os
+from pathlib import Path
+import tempfile
+
+
+def atomic_write(path: Path, content: str):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as stream:
+            temporary = Path(stream.name)
+            stream.write(content)
+        os.replace(temporary, path)
+    finally:
+        if temporary and temporary.exists():
+            temporary.unlink()
+
+
+def write_report(data: dict, directory: Path, generated_at: str, *, note: str = "") -> Path:
+    def e(value):
+        return escape(str(value), quote=True)
+
+    latest = {}
+    for check in data["checks"]:
+        latest.setdefault(check["repository"], check["status"])
+    sources = "".join(
+        f'<tr><td><strong>{e(s["repository"])}</strong></td>'
+        f'<td><a href="{e(s["release"]["url"])}" rel="noreferrer">{e(s["release"]["tag"])}</a></td>'
+        f'<td>{e(s["checked_at"])}</td><td><span class="badge {e(latest.get(s["repository"], "unknown"))}">'
+        f'{e(latest.get(s["repository"], "unknown"))}</span></td></tr>' for s in data["snapshots"]
+    ) or '<tr><td colspan="4" class="empty">No successful observations yet. Check the run history below.</td></tr>'
+    events = "".join(
+        f'<tr><td><strong>{e(item["repository"])}</strong><small>{e(item["detected_at"])}</small></td>'
+        f'<td><span class="muted">{e(item["payload"]["previous"]["tag"])}</span> &rarr; '
+        f'<strong>{e(item["payload"]["current"]["tag"])}</strong></td>'
+        f'<td><span class="badge {"delivered" if item["delivered_at"] else "pending"}">'
+        f'{"Delivered" if item["delivered_at"] else "Pending"}</span>'
+        f'<small>{e(item["last_error"] or item["delivered_at"] or "Waiting for delivery")}</small></td>'
+        f'<td>{item["attempts"]}</td></tr>' for item in data["events"]
+    ) or '<tr><td colspan="4" class="empty">No release changes yet. The first observation creates a baseline.</td></tr>'
+    checks = "".join(
+        f'<tr><td>{e(c["checked_at"])}</td><td>{e(c["repository"])}</td>'
+        f'<td><span class="badge {e(c["status"])}">{e(c["status"])}</span></td><td>{e(c["detail"])}</td></tr>'
+        for c in data["checks"]
+    ) or '<tr><td colspan="4" class="empty">No checks recorded.</td></tr>'
+    totals = data["totals"]
+    html = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Release Watch · Monitoring report</title>
+<style>
+:root{color-scheme:light;--ink:#172e37;--muted:#60747c;--line:#dce5e7;--accent:#007f72}
+*{box-sizing:border-box}body{margin:0;background:#f3f6f5;color:var(--ink);font:15px/1.6 system-ui,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:48px 32px}header{border-bottom:1px solid var(--line);padding-bottom:28px}
+.brand{font-size:12px;letter-spacing:.17em;text-transform:uppercase;color:var(--accent);font-weight:750}
+h1{font-size:clamp(34px,5vw,54px);line-height:1.15;margin:16px 0 12px;letter-spacing:-.04em}
+h2{font-size:20px;letter-spacing:-.02em;margin:0}p{margin:8px 0}.muted,small{color:var(--muted)}
+small{display:block;font-size:12px;margin-top:4px}.intro{max-width:660px;color:var(--muted);font-size:17px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:28px 0}
+.stat{background:white;border:1px solid var(--line);border-radius:12px;padding:20px}
+.stat b{display:block;font-size:34px;line-height:1.3}.stat span{color:var(--muted);font-size:13px}
+section{background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0;overflow:hidden}
+.section-head{padding:22px 24px 16px}.section-head p{color:var(--muted);font-size:13px;margin-bottom:0}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:660px;text-align:left;font-size:13px}
+th{background:#f7f9f9;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+td,th{padding:15px 24px;border-top:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+a{color:var(--accent);text-decoration:none;font-weight:700}a:hover{text-decoration:underline}
+.badge{display:inline-block;font-size:11px;font-weight:750;border-radius:6px;padding:3px 9px;background:#eef2f3;color:#46616a}
+.changed,.delivered{background:#dcf4e9;color:#126546}.pending{background:#fff0cb;color:#895500}
+.error{background:#ffe4e4;color:#a72929}.baseline{background:#e7eefb;color:#36518e}.empty{padding:28px 24px;color:var(--muted)}
+footer{display:flex;justify-content:space-between;gap:16px;font-size:12px;color:var(--muted);padding-top:12px}
+@media(max-width:650px){main{padding:28px 16px}.stats{grid-template-columns:repeat(2,1fr)}td,th{padding:12px 16px}footer,footer span{display:block}.scroll:before{content:"Scroll table horizontally to see all columns";display:block;padding:0 24px 12px;font-size:11px;color:var(--muted)}}
+@media print{body{background:white}main{padding:0}section,.stat{break-inside:avoid}.scroll{overflow:visible}}
+</style></head><body><main>
+"""
+    html += f"""<header><div class="brand">Sebastian / Python Automation</div>
+<h1>Release Watch<span style="color:var(--accent)">.</span></h1>
+{f'<p class="badge baseline">{e(note)}</p>' if note else ''}
+<p class="intro">A clear record of what changed, when it changed, and whether the alert reached its destination.</p>
+<small>Generated {e(generated_at)} · All timestamps include a UTC offset</small></header>
+<div class="stats"><div class="stat"><b>{len(data['snapshots'])}</b><span>Repositories observed</span></div>
+<div class="stat"><b>{totals['checks']}</b><span>Checks recorded</span></div>
+<div class="stat"><b>{totals['changes']}</b><span>Release changes</span></div>
+<div class="stat"><b>{totals['pending']}</b><span>Alerts pending</span></div></div>
+<section><div class="section-head"><h2>Latest known releases</h2><p>Last successful data is retained when a source fails. Includes previously configured repositories.</p></div>
+<div class="scroll"><table><thead><tr><th>Repository</th><th>Release</th><th>Last successful check</th><th>Latest check</th></tr></thead><tbody>{sources}</tbody></table></div></section>
+<section><div class="section-head"><h2>Changes &amp; alert delivery</h2><p>Most recent 100 events. An unchanged release produces no new event.</p></div>
+<div class="scroll"><table><thead><tr><th>Repository / detected</th><th>Version change</th><th>Delivery</th><th>Attempts</th></tr></thead><tbody>{events}</tbody></table></div></section>
+<section><div class="section-head"><h2>Check history</h2><p>Most recent 100 checks, including failures.</p></div>
+<div class="scroll"><table><thead><tr><th>Checked at</th><th>Repository</th><th>Result</th><th>Detail</th></tr></thead><tbody>{checks}</tbody></table></div></section>
+<footer><span>Release Watch · Portfolio project by Sebastian</span><span>SQLite history / JSON webhook / No runtime dependencies</span></footer>
+</main></body></html>"""
+    atomic_write(directory / "report.json", json.dumps({"generated_at": generated_at, **data}, indent=2) + "\n")
+    atomic_write(directory / "report.html", html)
+    return directory / "report.html"

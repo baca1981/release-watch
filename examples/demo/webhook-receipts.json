@@ -1,0 +1,52 @@
+[
+  {
+    "status": 503,
+    "idempotency_key": "032adc62-cab4-425c-a361-72539592abb4",
+    "payload": {
+      "schema_version": 1,
+      "event_id": "032adc62-cab4-425c-a361-72539592abb4",
+      "event": "release.changed",
+      "repository": "demo/example",
+      "detected_at": "2026-01-01T12:04:00+00:00",
+      "previous": {
+        "release_id": 1,
+        "tag": "v1.0.0",
+        "name": "Synthetic demo release",
+        "url": "https://github.com/demo/example/releases/tag/v1.0.0",
+        "published_at": "2026-01-01T12:00:00Z"
+      },
+      "current": {
+        "release_id": 2,
+        "tag": "v1.1.0",
+        "name": "Synthetic demo release",
+        "url": "https://github.com/demo/example/releases/tag/v1.1.0",
+        "published_at": "2026-01-01T12:00:00Z"
+      }
+    }
+  },
+  {
+    "status": 204,
+    "idempotency_key": "032adc62-cab4-425c-a361-72539592abb4",
+    "payload": {
+      "schema_version": 1,
+      "event_id": "032adc62-cab4-425c-a361-72539592abb4",
+      "event": "release.changed",
+      "repository": "demo/example",
+      "detected_at": "2026-01-01T12:04:00+00:00",
+      "previous": {
+        "release_id": 1,
+        "tag": "v1.0.0",
+        "name": "Synthetic demo release",
+        "url": "https://github.com/demo/example/releases/tag/v1.0.0",
+        "published_at": "2026-01-01T12:00:00Z"
+      },
+      "current": {
+        "release_id": 2,
+        "tag": "v1.1.0",
+        "name": "Synthetic demo release",
+        "url": "https://github.com/demo/example/releases/tag/v1.1.0",
+        "published_at": "2026-01-01T12:00:00Z"
+      }
+    }
+  }
+]

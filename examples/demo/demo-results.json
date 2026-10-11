@@ -1,0 +1,38 @@
+[
+  {
+    "step": "1. Establish baseline",
+    "checked": 1,
+    "changed": 0,
+    "source_errors": 0,
+    "delivered": 0,
+    "delivery_errors": 0,
+    "pending": 0
+  },
+  {
+    "step": "2. Same release: no duplicate",
+    "checked": 1,
+    "changed": 0,
+    "source_errors": 0,
+    "delivered": 0,
+    "delivery_errors": 0,
+    "pending": 0
+  },
+  {
+    "step": "3. New release: receiver returns 503",
+    "checked": 1,
+    "changed": 1,
+    "source_errors": 0,
+    "delivered": 0,
+    "delivery_errors": 1,
+    "pending": 1
+  },
+  {
+    "step": "4. Retry queued alert: receiver accepts",
+    "checked": 1,
+    "changed": 0,
+    "source_errors": 0,
+    "delivered": 1,
+    "delivery_errors": 0,
+    "pending": 0
+  }
+]

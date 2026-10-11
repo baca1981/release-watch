@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sebastian-release-watch"
+version = "1.0.0"
+description = "A small, reliable GitHub release monitor with SQLite history and webhook alerts."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "Sebastian"}]
+dependencies = []
+
+[project.scripts]
+release-watch = "release_watch.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["release_watch*"]
